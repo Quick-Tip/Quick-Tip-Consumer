@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RadioGroup
+        android:id="@+id/payway"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <RadioButton
+            android:id="@+id/paypal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:textAlignment="textStart"
+            android:layoutDirection="rtl"
+            android:textSize="20dp"
+            android:text="PayPal"
+            />
+        <RadioButton
+            android:id="@+id/alipay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:textAlignment="textStart"
+            android:layoutDirection="rtl"
+            android:textSize="20dp"
+            android:text="AliPay"
+            />
+        <RadioButton
+            android:id="@+id/wechat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:textAlignment="textStart"
+            android:layoutDirection="rtl"
+            android:textSize="20dp"
+            android:text="Wechat Pay"
+            />
+        <RadioButton
+            android:id="@+id/credit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:textAlignment="textStart"
+            android:layoutDirection="rtl"
+            android:textSize="20dp"
+            android:text="Credit Card"
+            />
+        <RadioButton
+            android:id="@+id/bank"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:textAlignment="textStart"
+            android:layoutDirection="rtl"
+            android:textSize="20dp"
+            android:text="Bank Card"
+            />
+    </RadioGroup>
+</LinearLayout>

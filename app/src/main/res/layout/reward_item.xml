@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="7dp"
+    >
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14dp"
+        android:text="Pay a tip to"
+        android:layout_marginStart="13dp"
+        android:layout_marginTop="12dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/textView2" />
+
+    <TextView
+        android:id="@+id/waitor_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="name"
+        android:textSize="20dp"
+        android:textColor="#444"
+        android:layout_alignBaseline="@+id/textView2"
+        android:layout_alignBottom="@+id/textView2"
+        android:layout_toEndOf="@+id/textView2"
+        android:layout_marginStart="11dp" />
+
+    <TextView
+        android:id="@+id/comment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="暂无评价"
+        android:textSize="14dp"
+        android:textColor="#444"
+        android:layout_marginLeft="15dp"
+        android:layout_below="@+id/stars"
+        android:layout_toStartOf="@+id/waitor_name"
+        android:layout_marginTop="7dp" />
+
+    <RatingBar
+        style="@style/RatingStyle"
+        android:id="@+id/stars"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:stepSize="1"
+        android:isIndicator="true"
+        android:layout_marginTop="2dp"
+        android:layout_below="@+id/waitor_name"
+        android:layout_alignStart="@+id/textView2" />
+
+    <TextView
+        android:id="@+id/date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14dp"
+        android:text="2017.7.5"
+        android:layout_alignBaseline="@+id/comment"
+        android:layout_alignBottom="@+id/comment"
+        android:layout_alignEnd="@+id/restaurant" />
+
+    <TextView
+        android:id="@+id/restaurant"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:text="留学生食堂"
+        android:layout_marginRight="20dp"
+        android:textSize="14dp"
+        android:maxLines="1"
+        android:ellipsize="marquee"
+        android:textDirection="rtl"
+        android:layout_marginEnd="12dp"
+        android:layout_below="@+id/date"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:id="@+id/money"
+        android:layout_width="153dp"
+        android:layout_height="39dp"
+        android:text="$money"
+        android:textColor="@color/colorSubPrimary"
+        android:textDirection="rtl"
+        android:textSize="24dp"
+        android:layout_alignTop="@+id/waitor_name"
+        android:layout_alignEnd="@+id/date" />
+
+
+</RelativeLayout>

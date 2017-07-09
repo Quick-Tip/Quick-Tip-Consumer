@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <com.project.lowesyang.quick_tip_consumer.Boot.EditTextWithClear
+        android:id="@+id/login_username"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:hint="Username"
+        android:layout_marginTop="35dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <com.project.lowesyang.quick_tip_consumer.Boot.EditTextWithClear
+        android:id="@+id/login_password"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:hint="Password"
+        android:inputType="textPassword"
+        android:layout_marginTop="30dp"
+        android:layout_below="@+id/login_username"
+        android:layout_alignStart="@+id/login_username" />
+
+    <Button
+        android:theme="@style/primaryBtn"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="Login"
+        android:textColor="#fff"
+        android:layout_below="@+id/login_password"
+        android:layout_alignStart="@+id/login_password"
+        android:id="@+id/submit_login" />
+
+    <Button
+        android:id="@+id/gotoRegister"
+        android:theme="@style/subPrimaryBtn"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:text="Go Register"
+        android:textColor="#fff"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/submit_login"
+        android:layout_alignStart="@+id/submit_login" />
+</RelativeLayout>

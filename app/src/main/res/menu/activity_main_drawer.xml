@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:checked="true"
+            android:id="@+id/gotip"
+            android:icon="@drawable/ic_menu_gotip"
+            android:title="GoTip" />
+        <item
+            android:id="@+id/payway"
+            android:icon="@drawable/ic_menu_payway"
+            android:title="Pay Way" />
+        <item
+            android:id="@+id/account"
+            android:icon="@drawable/ic_menu_user"
+            android:title="Account" />
+        <item
+            android:id="@+id/logout"
+            android:icon="@drawable/ic_menu_logout"
+            android:title="Logout" />
+    </group>
+
+</menu>

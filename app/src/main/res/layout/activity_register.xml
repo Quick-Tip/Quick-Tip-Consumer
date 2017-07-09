@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.project.lowesyang.quick_tip_consumer.Boot.EditTextWithClear
+        android:id="@+id/register_username"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:hint="Username"
+        android:layout_marginTop="35dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <com.project.lowesyang.quick_tip_consumer.Boot.EditTextWithClear
+        android:id="@+id/register_password"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:hint="Password"
+        android:inputType="textPassword"
+        android:layout_marginTop="30dp"
+        android:layout_below="@+id/register_username"
+        android:layout_alignStart="@+id/register_username" />
+
+    <com.project.lowesyang.quick_tip_consumer.Boot.EditTextWithClear
+        android:id="@+id/confirm_password"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:hint="Confirm Password"
+        android:inputType="textPassword"
+        android:layout_marginTop="30dp"
+        android:layout_below="@+id/register_password"
+        android:layout_alignStart="@+id/register_password" />
+
+    <Button
+        android:theme="@style/primaryBtn"
+        android:id="@+id/submit_register"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:text="Register"
+        android:textColor="#fff"
+        android:layout_marginTop="30dp"
+        android:layout_below="@+id/confirm_password"
+        android:layout_alignStart="@+id/confirm_password" />
+
+
+</RelativeLayout>
