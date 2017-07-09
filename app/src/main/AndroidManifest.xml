@@ -44,6 +44,8 @@
             android:name=".Reward.GoTipFormActivity"
             android:label="Last Step"
             ></activity>
+        <activity android:name=".Reward.RewardSuccess" android:label="Thanks for tip!">
+        </activity>
     </application>
 
 </manifest>

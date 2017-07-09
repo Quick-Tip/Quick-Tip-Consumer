@@ -16,7 +16,7 @@ public class LocalStorage {
         SharedPreferences.Editor editor=sp.edit();
         String target=null;
         if(val!=null) target=val;
-        editor.putString("token",target);
+        editor.putString(key,target);
         editor.commit();
     }
 

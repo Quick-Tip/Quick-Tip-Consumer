@@ -16,6 +16,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.project.lowesyang.quick_tip_consumer.MainActivity;
 import com.project.lowesyang.quick_tip_consumer.R;
+import com.project.lowesyang.quick_tip_consumer.utils.LoadingAlertDialog;
 import com.project.lowesyang.quick_tip_consumer.utils.LocalStorage;
 import com.project.lowesyang.quick_tip_consumer.utils.NetworkState;
 
@@ -56,11 +57,14 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(final View v) {
                 final String username=userInput.getText().toString();
                 final String password=pswdInput.getText().toString();
+                final LoadingAlertDialog loading=new LoadingAlertDialog(v.getContext());
                 RequestQueue mQueue= Volley.newRequestQueue(getApplicationContext());
                 HashMap<String,Object> data=new HashMap<String, Object>();
 
                 data.put("username",username);
                 data.put("password",password);
+                data.put("user_type",0);
+                loading.show();
                 JsonObjectRequest jsonRequest=new JsonObjectRequest
                         (Request.Method.POST, "http://crcrcry.com.cn/user/login", new JSONObject(data), new Response.Listener<JSONObject>() {
                             @Override
@@ -70,7 +74,7 @@ public class LoginActivity extends AppCompatActivity {
                                     if (( int ) response.get("code") == 0) {
                                         LocalStorage.setItem(getApplicationContext(), "token", response.getJSONObject("data").getString("token"));
                                         LocalStorage.setItem(getApplicationContext(), "userInfo", response.getJSONObject("data").getString("userInfo"));
-                                        System.out.println(LocalStorage.getItem(getApplicationContext(), "token"));
+//                                        System.out.println(LocalStorage.getItem(getApplicationContext(), "token"));
                                         Intent intent = new Intent(v.getContext(), MainActivity.class);
                                         startActivity(intent);
                                         finish();
@@ -82,13 +86,15 @@ public class LoginActivity extends AppCompatActivity {
                                     e.printStackTrace();
                                     msg = e.getMessage();
                                 }
+                                loading.hide();
                                 Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
 
                             }
                         }, new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
-                                Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
+                                loading.hide();
+                                Toast.makeText(getApplicationContext(),"Network error", Toast.LENGTH_LONG).show();
                             }
                         });
                 mQueue.add(jsonRequest);

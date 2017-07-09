@@ -10,5 +10,4 @@
     android:id="@+id/content_main"
     >
 
-
 </android.support.constraint.ConstraintLayout>
