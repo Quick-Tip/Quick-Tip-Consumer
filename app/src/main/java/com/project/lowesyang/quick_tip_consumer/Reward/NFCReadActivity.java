@@ -1,5 +1,6 @@
 package com.project.lowesyang.quick_tip_consumer.Reward;
 
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.nfc.NdefMessage;
@@ -13,7 +14,18 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.project.lowesyang.quick_tip_consumer.R;
+import com.project.lowesyang.quick_tip_consumer.utils.LoadingAlertDialog;
+import com.project.lowesyang.quick_tip_consumer.utils.LocalStorage;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 
@@ -23,6 +35,9 @@ import java.io.UnsupportedEncodingException;
 
 public class NFCReadActivity extends AppCompatActivity {
     private boolean NFCSupport=true;
+    private NfcAdapter nfcAdapter=null;
+    private PendingIntent pi=null;
+    private boolean isLoading=false;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,7 +57,15 @@ public class NFCReadActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        nfcInit();
+        if (nfcAdapter != null)
+            nfcAdapter.enableForegroundDispatch(this, pi, null, null);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (nfcAdapter != null)
+            nfcAdapter.disableForegroundDispatch(this);
     }
 
     private void nfcInit(){
@@ -50,7 +73,8 @@ public class NFCReadActivity extends AppCompatActivity {
         // 监听扫描NFC
         IntentFilter ifilters=new IntentFilter();
         ifilters.addAction(NfcAdapter.ACTION_NDEF_DISCOVERED);  //NDEF
-        NfcAdapter nfcAdapter=NfcAdapter.getDefaultAdapter(this);
+        nfcAdapter=NfcAdapter.getDefaultAdapter(this);
+        pi=PendingIntent.getActivity(this,0,new Intent(this,getClass()),0);
         if(nfcAdapter==null){
             NFCSupport=false;
             Toast.makeText(this,"Device dose not support NFC!",Toast.LENGTH_LONG).show();
@@ -68,20 +92,71 @@ public class NFCReadActivity extends AppCompatActivity {
 
     @Override
     protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
         if(NFCSupport) {
-            String response=readNFCTag();
-            if(response!=null){
 
+            String response=readNFCTag(intent);
+            if(response!=null){
+                Toast.makeText(getApplicationContext(),response,Toast.LENGTH_LONG).show();
+                String[] nfcData=response.split(" ");
+                String shopId=nfcData[0];
+                String deskId=nfcData[1];
+                System.out.println(nfcData[0]+" "+nfcData[1]);
+
+                // 防止重复发请求
+                if(!isLoading) {
+                    isLoading=true;
+                    RequestQueue mqueue = Volley.newRequestQueue(this);
+                    final LoadingAlertDialog loading = new LoadingAlertDialog(this);
+                    loading.show();
+                    JsonObjectRequest jsonRequest = new JsonObjectRequest
+                            (Request.Method.GET, "http://crcrcry.com.cn/nfc?token="+LocalStorage.getItem(getApplicationContext(),"token")+"&shop_id=" + shopId + "&desktop_id=" + deskId, null, new Response.Listener<JSONObject>() {
+                                @Override
+                                public void onResponse(JSONObject response) {
+                                    try {
+                                        JSONObject dataJson = response.getJSONObject("data");
+                                        if (response.getInt("code") == 0) {
+                                            LocalStorage.setItem(getApplicationContext(), "token", dataJson.getString("token"));
+                                            JSONObject deskInfo = dataJson.getJSONObject("desktopInfo");
+                                            // 跳转至打赏表单页面
+                                            Intent goTipFormIntent = new Intent(getApplicationContext(), GoTipFormActivity.class);
+                                            goTipFormIntent.putExtra("deskInfo", deskInfo.toString());
+
+                                            startActivity(goTipFormIntent);
+                                        } else {
+                                            Toast.makeText(getApplicationContext(), response.getString("msg"), Toast.LENGTH_LONG).show();
+                                        }
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                    loading.hide();
+                                }
+                            }, new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    loading.hide();
+                                    String msg = "";
+                                    if (error.networkResponse.statusCode == 401) {
+                                        msg = "Invalid token";
+                                    } else {
+                                        msg = "Network error";
+                                    }
+                                    Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                    mqueue.add(jsonRequest);
+                    isLoading=false;
+                }
             }
         }
     }
 
     // 读取NFC标签
-    private String readNFCTag(){
+    private String readNFCTag(Intent intent){
         String response=null;
-        if(NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction())){
+        if(NfcAdapter.ACTION_NDEF_DISCOVERED.equals(intent.getAction())){
             //从标签读取数据
-            Parcelable[] nfcMsgs=getIntent().getParcelableArrayExtra(
+            Parcelable[] nfcMsgs=intent.getParcelableArrayExtra(
                     NfcAdapter.EXTRA_NDEF_MESSAGES
             );
             NdefMessage msgs[]=null;
@@ -100,22 +175,8 @@ public class NFCReadActivity extends AppCompatActivity {
                 if(msgs!=null){
                     // 只读第一个信息
                     NdefRecord record=msgs[0].getRecords()[0];
-                    // 验证TNF是否为TNF_WELL_KNOWN
-                    if(record.getTnf()!=NdefRecord.TNF_WELL_KNOWN)
-                        return null;
-                    // 验证可变长度类型是否为RTD_TEXT
-                    if(!record.getType().equals(NdefRecord.RTD_TEXT))
-                        return null;
-                    byte[] payload=record.getPayload();
-                    Byte statusByte=payload[0];
-                    String textCoding=((statusByte&0200)==0)?"utf-8":"utf-16";
-                    int codeLength=statusByte&0077;
-                    try{
-                        response=new String(payload,codeLength+1,payload.length-codeLength-1,textCoding);
-                    }
-                    catch(UnsupportedEncodingException e){
-                        Toast.makeText(getApplicationContext(),e.getMessage(),Toast.LENGTH_LONG).show();
-                    }
+                    response=parseTextRecord(record);
+                    System.out.println(response);
                 }
             }
             catch (Exception e){
@@ -124,4 +185,26 @@ public class NFCReadActivity extends AppCompatActivity {
         }
         return response;
     }
+
+    private String parseTextRecord(NdefRecord record){
+        String response=null;
+        // 验证TNF是否为TNF_WELL_KNOWN
+        if(record.getTnf()!=NdefRecord.TNF_WELL_KNOWN) {
+            System.out.println("不是TNF_WELL_KNOW");
+            return null;
+        }
+
+        byte[] payload=record.getPayload();
+        Byte statusByte=payload[0];
+        String textCoding=((statusByte&0x80)==0)?"utf-8":"utf-16";
+        int codeLength=statusByte&0x3f;
+        try{
+            response=new String(payload,codeLength+1,payload.length-codeLength-1,textCoding);
+        }
+        catch(UnsupportedEncodingException e){
+            Toast.makeText(getApplicationContext(),e.getMessage(),Toast.LENGTH_LONG).show();
+        }
+        return response;
+    }
+
 }

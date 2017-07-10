@@ -40,6 +40,11 @@ public class RewardListAdapter extends BaseAdapter {
         return position;
     }
 
+    public void updateView(List<RewardModel> newList){
+        this.dataList=newList;
+        this.notifyDataSetChanged();
+    }
+
     public final class ViewHolder{
         public TextView waitor_name;
         public TextView money;
@@ -69,7 +74,7 @@ public class RewardListAdapter extends BaseAdapter {
 
         RewardModel item=dataList.get(position);
         holder.waitor_name.setText(item.waitor_name);
-        holder.money.setText(item.money);
+        holder.money.setText(item.money+" $");
         holder.stars.setRating((float)item.stars);
         holder.date.setText(item.date);
         holder.comment.setText(item.comment);

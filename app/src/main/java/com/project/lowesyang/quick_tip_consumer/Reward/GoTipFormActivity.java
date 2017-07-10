@@ -53,11 +53,24 @@ public class GoTipFormActivity extends AppCompatActivity {
     private String originColor="#cccccc";
     private ArrayList<Button> btnList = new ArrayList<>();
     private int[] moneyList={1,3,5,10,20,50};
+    private JSONObject deskInfo=null;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gotip_form);
 
+        //接收上一个页面传来的intent
+        Intent nfcIntent=getIntent();
+        JSONObject res= null;
+        try {
+            deskInfo = new JSONObject(nfcIntent.getStringExtra("deskInfo"));
+            System.out.println(deskInfo);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        //各组件句柄初始化
         finalAmount= (TextView) findViewById(R.id.finalAmount);
         customedInput= (EditText) findViewById(R.id.customedInput);
         starRating= ( RatingBar ) findViewById(R.id.starRating);
@@ -154,6 +167,7 @@ public class GoTipFormActivity extends AppCompatActivity {
                 data.put("money",resultAmount);
                 data.put("comment",commentInput.getText().toString());
                 data.put("getter",10001);
+                data.put("shop",10002);
 
                 final LoadingAlertDialog loading=new LoadingAlertDialog(v.getContext());
                 loading.show();
@@ -181,10 +195,15 @@ public class GoTipFormActivity extends AppCompatActivity {
                             @Override
                             public void onErrorResponse(VolleyError error) {
                                 loading.hide();
+                                String msg="";
                                 if(error.networkResponse.statusCode==401){
-                                    Toast.makeText(getApplicationContext(),"Invalid token",Toast.LENGTH_SHORT).show();
+                                    msg="Invalid token";
                                 }
-                                else Toast.makeText(getApplicationContext(),"Network error",Toast.LENGTH_SHORT).show();
+                                else {
+                                    msg="Network error";
+                                }
+                                Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_SHORT).show();
+
                             }
                         });
                 mqueue.add(jsonRequest);

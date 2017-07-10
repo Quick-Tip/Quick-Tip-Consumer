@@ -7,14 +7,15 @@
 
     <EditText
         android:id="@+id/nickname"
-        android:layout_width="match_parent"
+        android:layout_width="270dp"
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textPersonName"
         android:hint="Name"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="29dp"
+        android:layout_marginEnd="7dp"
         android:layout_below="@+id/imageView2"
-        android:layout_alignParentStart="true"/>
+        android:layout_alignParentEnd="true"/>
 
     <Button
         android:theme="@style/primaryBtn"
@@ -35,5 +36,16 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="28dp" />
+
+    <TextView
+        android:id="@+id/textView9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="24dp"
+        android:text="Name"
+        android:layout_marginStart="10dp"
+        android:layout_alignBaseline="@+id/nickname"
+        android:layout_alignBottom="@+id/nickname"
+        android:layout_alignParentStart="true"/>
 
 </RelativeLayout>

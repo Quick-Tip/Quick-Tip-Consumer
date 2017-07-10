@@ -79,7 +79,12 @@ public class Account extends Fragment {
                 loading.show();
                 HashMap<String,Object> data=new HashMap<String, Object>();
                 data.put("token",LocalStorage.getItem(v.getContext(),"token"));
-                data.put("nickname",nickname.getText());
+                String name=nickname.getText().toString();
+                if(name.length()<6){
+                    Toast.makeText(getActivity(),"Name should have more than 4 characters",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                data.put("nickname",nickname.getText().toString());
                 JsonObjectRequest jsonObjectRequest=new JsonObjectRequest(Request.Method.PUT, "http://crcrcry.com.cn/user", new JSONObject(data), new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -88,7 +93,7 @@ public class Account extends Fragment {
                             msg=response.getString("msg");
                             if((int)response.get("code")==0){
                                 LocalStorage.setItem(getActivity(),"token",response.getJSONObject("data").getString("token"));
-                                userInfo.put("nickname",nickname.getText());
+                                userInfo.put("nickname",nickname.getText().toString());
                                 LocalStorage.setItem(getActivity(),"userInfo",userInfo.toString());
                                 submitBtn.setEnabled(false);
                             }
@@ -103,10 +108,14 @@ public class Account extends Fragment {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         loading.hide();
+                        String msg="";
                         if(error.networkResponse.statusCode==401){
-                            Toast.makeText(v.getContext(),"Invalid token",Toast.LENGTH_SHORT).show();
+                            msg="Invalid token";
                         }
-                        else Toast.makeText(v.getContext(),"Network error",Toast.LENGTH_SHORT).show();
+                        else {
+                            msg="Network error";
+                        }
+                        Toast.makeText(getActivity(),"Invalid token",Toast.LENGTH_SHORT).show();
                     }
                 });
                 mqueue.add(jsonObjectRequest);

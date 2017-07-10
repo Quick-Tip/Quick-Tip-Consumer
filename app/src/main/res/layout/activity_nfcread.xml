@@ -21,7 +21,18 @@
         android:layout_marginTop="31dp"
         android:textSize="18dp"
         android:textColor="#bbbbbb"
-        android:text="Touch GoTip on your desk" />
+        android:text="Touch GoTip on the desk" />
+
+    <TextView
+        android:id="@+id/nfc_notice2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textSize="18dp"
+        android:textColor="#bbbbbb"
+        android:text="with your mobile back"
+        android:layout_below="@+id/nfc_notice"
+        android:layout_centerHorizontal="true"/>
 
 
 </RelativeLayout>

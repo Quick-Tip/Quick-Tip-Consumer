@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="7dp"
+    android:paddingBottom="10dp"
     >
 
 
@@ -32,14 +32,15 @@
 
     <TextView
         android:id="@+id/comment"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="180dp"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:layout_height="35dp"
         android:text="暂无评价"
         android:textSize="14dp"
         android:textColor="#444"
         android:layout_marginLeft="15dp"
         android:layout_below="@+id/stars"
-        android:layout_toStartOf="@+id/waitor_name"
         android:layout_marginTop="7dp" />
 
     <RatingBar
@@ -61,7 +62,7 @@
         android:text="2017.7.5"
         android:layout_alignBaseline="@+id/comment"
         android:layout_alignBottom="@+id/comment"
-        android:layout_alignEnd="@+id/restaurant" />
+        android:layout_alignEnd="@+id/restaurant"/>
 
     <TextView
         android:id="@+id/restaurant"
@@ -71,11 +72,11 @@
         android:layout_marginRight="20dp"
         android:textSize="14dp"
         android:maxLines="1"
-        android:ellipsize="marquee"
+        android:ellipsize="end"
         android:textDirection="rtl"
-        android:layout_marginEnd="12dp"
-        android:layout_below="@+id/date"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignBottom="@+id/comment"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="7dp"/>
 
     <TextView
         android:id="@+id/money"

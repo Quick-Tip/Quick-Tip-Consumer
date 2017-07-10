@@ -23,10 +23,20 @@
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true" />
     </RelativeLayout>
-    <ListView
-        android:id="@+id/rewards"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/refreshList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        />
+        android:layout_marginTop="2dp"
+        >
+        <ListView
+            android:id="@+id/rewards"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:overScrollMode="never"
+            android:footerDividersEnabled="false"
+            android:headerDividersEnabled="true"
+            />
+    </android.support.v4.widget.SwipeRefreshLayout>
 </LinearLayout>

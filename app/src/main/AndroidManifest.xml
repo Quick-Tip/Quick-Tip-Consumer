@@ -32,7 +32,8 @@
         </activity>
         <activity
             android:name=".Reward.NFCReadActivity"
-            android:label="Find a GoTip"
+            android:label="Touch a GoTip"
+            android:launchMode="singleTop"
             >
             <intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
