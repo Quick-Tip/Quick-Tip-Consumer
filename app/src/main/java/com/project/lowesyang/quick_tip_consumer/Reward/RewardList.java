@@ -174,6 +174,7 @@ public class RewardList extends Fragment {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+                        isLoading=false;
                     }
                 }, new Response.ErrorListener() {
                     @Override
@@ -186,10 +187,10 @@ public class RewardList extends Fragment {
                             msg="Network error";
                         }
                         Toast.makeText(getActivity(),msg,Toast.LENGTH_SHORT).show();
+                        isLoading=false;
                     }
                 });
         mqueue.add(jsonRequest);
-        isLoading=false;
 
     }
 
