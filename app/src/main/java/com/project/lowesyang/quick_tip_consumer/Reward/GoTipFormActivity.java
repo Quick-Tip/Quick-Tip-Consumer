@@ -62,7 +62,6 @@ public class GoTipFormActivity extends AppCompatActivity {
 
         //接收上一个页面传来的intent
         Intent nfcIntent=getIntent();
-        JSONObject res= null;
         try {
             deskInfo = new JSONObject(nfcIntent.getStringExtra("deskInfo"));
             System.out.println(deskInfo);
@@ -166,8 +165,13 @@ public class GoTipFormActivity extends AppCompatActivity {
                 data.put("star",starRating.getRating());
                 data.put("money",resultAmount);
                 data.put("comment",commentInput.getText().toString());
-                data.put("getter",10001);
-                data.put("shop",10002);
+                try {
+                    data.put("getter",deskInfo.getString("waiter_id"));
+                    data.put("shop",deskInfo.getString("shop_id"));
+                    data.put("desk",deskInfo.getString("desk_id"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
                 final LoadingAlertDialog loading=new LoadingAlertDialog(v.getContext());
                 loading.show();
@@ -196,7 +200,7 @@ public class GoTipFormActivity extends AppCompatActivity {
                             public void onErrorResponse(VolleyError error) {
                                 loading.hide();
                                 String msg="";
-                                if(error.networkResponse.statusCode==401){
+                                if(error.networkResponse!=null && error.networkResponse.statusCode==401){
                                     msg="Invalid token";
                                 }
                                 else {

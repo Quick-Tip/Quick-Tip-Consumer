@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="10dp"
+    android:paddingBottom="8dp"
     >
 
 
@@ -70,6 +70,7 @@
         android:layout_height="wrap_content"
         android:text="留学生食堂"
         android:layout_marginRight="20dp"
+        android:layout_marginTop="5dp"
         android:textSize="14dp"
         android:maxLines="1"
         android:ellipsize="end"

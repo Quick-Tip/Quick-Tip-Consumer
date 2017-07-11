@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,15 +41,6 @@ public class NFCReadActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nfcread);
-        View tempBtn=findViewById(R.id.temp_btn);
-        tempBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent=new Intent(v.getContext(),GoTipFormActivity.class);
-                startActivity(intent);
-            }
-        });
-
         nfcInit();
     }
 
@@ -99,8 +89,8 @@ public class NFCReadActivity extends AppCompatActivity {
             if(response!=null){
                 Toast.makeText(getApplicationContext(),response,Toast.LENGTH_LONG).show();
                 String[] nfcData=response.split(" ");
-                String shopId=nfcData[0];
-                String deskId=nfcData[1];
+                final String shopId=nfcData[0];
+                final String deskId=nfcData[1];
                 System.out.println(nfcData[0]+" "+nfcData[1]);
 
                 // 防止重复发请求
@@ -120,6 +110,8 @@ public class NFCReadActivity extends AppCompatActivity {
                                             JSONObject deskInfo = dataJson.getJSONObject("desktopInfo");
                                             // 跳转至打赏表单页面
                                             Intent goTipFormIntent = new Intent(getApplicationContext(), GoTipFormActivity.class);
+                                            deskInfo.put("shop_id",shopId);
+                                            deskInfo.put("desk_id",deskId);
                                             goTipFormIntent.putExtra("deskInfo", deskInfo.toString());
 
                                             startActivity(goTipFormIntent);
@@ -136,7 +128,7 @@ public class NFCReadActivity extends AppCompatActivity {
                                 public void onErrorResponse(VolleyError error) {
                                     loading.hide();
                                     String msg = "";
-                                    if (error.networkResponse.statusCode == 401) {
+                                    if(error.networkResponse!=null && error.networkResponse.statusCode==401){
                                         msg = "Invalid token";
                                     } else {
                                         msg = "Network error";

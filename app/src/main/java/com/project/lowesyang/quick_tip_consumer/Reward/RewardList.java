@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -38,6 +39,7 @@ import java.util.List;
 public class RewardList extends Fragment {
     private RewardListAdapter adapter=null;
     private View loadmoreView=null;
+    private TextView completeText=null;
     private ArrayList<RewardModel> dataList=null;
     private boolean isLoading=false;        //是否正在请求数据
     private boolean isEnd=false;            //是否已获取所有数据
@@ -51,6 +53,14 @@ public class RewardList extends Fragment {
         loadmoreView=inflater.inflate(R.layout.load_more,null);
         loadmoreView.setVisibility(View.VISIBLE);       //刷新视图默认不可见
         listView = (ListView) view.findViewById(R.id.rewards);
+
+        // No more history textview
+        completeText = new TextView(getActivity());
+        completeText.setText("No more history");
+        completeText.setGravity(Gravity.CENTER);
+        completeText.setPadding(0, 30, 0, 30);
+
+
         dataList=new ArrayList<>();
         Button tipBtn= (Button) view.findViewById(R.id.tipBtn);
         final SwipeRefreshLayout refreshLayout= ( SwipeRefreshLayout ) view.findViewById(R.id.refreshList);
@@ -68,19 +78,17 @@ public class RewardList extends Fragment {
             @Override
             public void onRefresh() {
                 dataList=new ArrayList<RewardModel>();
+                if(isEnd){
+                    isEnd=false;
+                    listView.removeFooterView(completeText);
+                    listView.addFooterView(loadmoreView);
+                }
+                page=0;
                 getData();
                 refreshLayout.setRefreshing(false);
             }
         });
 
-        listView.addFooterView(loadmoreView);
-
-        return view;
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
         getData();
         // 监听滚动事件
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -90,7 +98,7 @@ public class RewardList extends Fragment {
             public void onScrollStateChanged(AbsListView view, int scrollState) {
                 // 若滚动至底部
                 if(last_index==total_index && !isLoading && (scrollState==AbsListView.OnScrollListener.SCROLL_STATE_IDLE) && !isEnd){
-//                    getData();
+                    getData();
                 }
             }
 
@@ -100,6 +108,23 @@ public class RewardList extends Fragment {
                 total_index=totalItemCount;
             }
         });
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                RewardModel model= ( RewardModel ) listView.getItemAtPosition(position);
+                // 打开新的activity，并传递获取到的model
+                Intent intent=new Intent(getActivity(),RewardDetail.class);
+                Bundle mbundle=new Bundle();
+                mbundle.putSerializable("model",model);
+                intent.putExtras(mbundle);
+                startActivity(intent);
+            }
+        });
+
+        listView.addFooterView(loadmoreView);
+
+        return view;
     }
 
     private void getData(){
@@ -130,6 +155,7 @@ public class RewardList extends Fragment {
                                 else{
                                     adapter.updateView(dataList);
                                 }
+                                page++;
                             }
                             else{
                                 Toast.makeText(getActivity(),response.getString("msg"),Toast.LENGTH_SHORT).show();
@@ -142,7 +168,7 @@ public class RewardList extends Fragment {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         String msg="";
-                        if(error.networkResponse.statusCode==401){
+                        if(error.networkResponse!=null && error.networkResponse.statusCode==401){
                             msg="Invalid token";
                         }
                         else {
@@ -176,10 +202,7 @@ public class RewardList extends Fragment {
         if(!isEnd) {
             isEnd = true;
             listView.removeFooterView(loadmoreView);
-            TextView completeText = new TextView(getActivity());
-            completeText.setText("No more history");
-            completeText.setGravity(Gravity.CENTER);
-            completeText.setPadding(0, 30, 0, 30);
+
             listView.addFooterView(completeText);
         }
     }

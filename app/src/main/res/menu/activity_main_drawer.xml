@@ -20,5 +20,16 @@
             android:icon="@drawable/ic_menu_logout"
             android:title="Logout" />
     </group>
-
+    <item android:title="Feedback">
+        <menu>
+            <item
+                android:id="@+id/bugSubmit"
+                android:icon="@drawable/ic_menu_bug"
+                android:title="Bug" />
+            <item
+                android:id="@+id/Contact"
+                android:icon="@drawable/ic_menu_contact"
+                android:title="Contact" />
+        </menu>
+    </item>
 </menu>

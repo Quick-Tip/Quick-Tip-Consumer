@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/cardView">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="111dp">
+
+            <ImageView
+                android:id="@+id/imageView6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="13dp"
+                android:src="@mipmap/waiter"/>
+
+            <TextView
+                android:id="@+id/waiter_nickname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Nickname"
+                android:textSize="24dp"
+                android:layout_marginStart="10dp"
+                android:layout_alignTop="@+id/imageView6"
+                android:layout_toEndOf="@+id/imageView6"/>
+
+            <TextView
+                android:id="@+id/waiter_restaurant"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:text="Restaurant"
+                android:layout_below="@+id/waiter_nickname"
+                android:layout_alignStart="@+id/waiter_nickname"
+                android:layout_marginTop="13dp"/>
+
+            <TextView
+                android:id="@+id/avg_score"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="15dp"
+                android:text="Score"
+                android:textColor="@color/colorAccent"
+                android:textSize="28dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true"/>
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_below="@+id/cardView"
+        android:layout_alignParentStart="true"
+        android:id="@+id/cardView2">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="110dp"
+            android:layout_alignStart="@+id/cardView"
+            android:layout_below="@+id/cardView">
+            <TextView
+                android:id="@+id/textView11"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="7dp"
+                android:textSize="18dp"
+                android:text="My Tip"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true"/>
+            <TextView
+                android:id="@+id/detail_money"
+                android:layout_width="140dp"
+                android:layout_height="wrap_content"
+                android:textSize="28dp"
+                android:textDirection="rtl"
+                android:text="Money$"
+                android:textColor="@color/colorSubPrimary"
+                android:layout_marginEnd="14dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true"/>
+            <TextView
+                android:id="@+id/detail_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2017-07-02"
+                android:layout_alignTop="@+id/detail_money"
+                android:layout_alignStart="@+id/textView11"
+                android:layout_marginTop="25dp"/>
+            <TextView
+                android:id="@+id/detail_restaurant"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="留学生食堂"
+                android:layout_below="@+id/detail_date"
+                android:layout_alignStart="@+id/detail_date"/>
+
+            <RatingBar
+                style="@style/RatingStyle"
+                android:id="@+id/detail_rating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:isIndicator="true"
+                android:stepSize="0.1"
+                android:layout_below="@+id/textView11"
+                android:layout_alignStart="@+id/textView11"/>
+
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/cardView2"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="10dp">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:minHeight="60dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp">
+            <TextView
+                android:id="@+id/textView12"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textSize="18dp"
+                android:text="Comment"
+                android:layout_marginStart="12dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true"/>
+            <TextView
+                android:id="@+id/detail_comment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:textSize="14dp"
+                android:text="Comment"
+                android:layout_below="@+id/textView12"
+                android:layout_alignParentStart="true"/>
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
+
+
+
+</RelativeLayout>

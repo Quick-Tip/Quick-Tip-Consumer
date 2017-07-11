@@ -1,10 +1,12 @@
 package com.project.lowesyang.quick_tip_consumer.Reward;
 
+import java.io.Serializable;
+
 /**
  * Created by LowesYang on 2017/7/6.
  */
 
-public class RewardModel {
+public class RewardModel implements Serializable{
     public final String uid;
     public final String waitor_name;
     public final String money;
