@@ -23,7 +23,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.project.lowesyang.quick_tip_consumer.R;
-import com.project.lowesyang.quick_tip_consumer.utils.LoadingAlertDialog;
 import com.project.lowesyang.quick_tip_consumer.utils.LocalStorage;
 
 import org.json.JSONArray;
@@ -62,7 +61,6 @@ public class RewardList extends Fragment {
         completeText.setGravity(Gravity.CENTER);
         completeText.setPadding(0, 30, 0, 30);
 
-        LoadingAlertDialog loading=new LoadingAlertDialog(getActivity());
 
 
         dataList=new ArrayList<>();
@@ -83,10 +81,8 @@ public class RewardList extends Fragment {
             public void onRefresh() {
                 initData();
                 getData();
-                refreshLayout.setRefreshing(false);
             }
         });
-        loading.show();
         initData();
         getData();
         // 监听滚动事件
@@ -122,7 +118,6 @@ public class RewardList extends Fragment {
         });
 
         listView.addFooterView(loadmoreView);
-        loading.hide();
 
         return view;
     }
@@ -141,6 +136,8 @@ public class RewardList extends Fragment {
         RequestQueue mqueue= Volley.newRequestQueue(getActivity());
         if(isLoading) return;
         isLoading=true;
+        refreshLayout.setRefreshing(true);
+
         final int psize=10;       //每次请求的数据数量
         //可选传入start,end
         JsonObjectRequest jsonRequest=new JsonObjectRequest
@@ -175,6 +172,7 @@ public class RewardList extends Fragment {
                             e.printStackTrace();
                         }
                         isLoading=false;
+                        refreshLayout.setRefreshing(false);
                     }
                 }, new Response.ErrorListener() {
                     @Override
@@ -188,6 +186,7 @@ public class RewardList extends Fragment {
                         }
                         Toast.makeText(getActivity(),msg,Toast.LENGTH_SHORT).show();
                         isLoading=false;
+                        refreshLayout.setRefreshing(false);
                     }
                 });
         mqueue.add(jsonRequest);
