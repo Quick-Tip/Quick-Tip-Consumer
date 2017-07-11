@@ -23,6 +23,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.project.lowesyang.quick_tip_consumer.R;
+import com.project.lowesyang.quick_tip_consumer.utils.LoadingAlertDialog;
 import com.project.lowesyang.quick_tip_consumer.utils.LocalStorage;
 
 import org.json.JSONArray;
@@ -45,6 +46,7 @@ public class RewardList extends Fragment {
     private boolean isEnd=false;            //是否已获取所有数据
     private ListView listView=null;
     private int page=0;         //打赏数据页数
+    SwipeRefreshLayout refreshLayout=null;
 
     @Nullable
     @Override
@@ -60,10 +62,12 @@ public class RewardList extends Fragment {
         completeText.setGravity(Gravity.CENTER);
         completeText.setPadding(0, 30, 0, 30);
 
+        LoadingAlertDialog loading=new LoadingAlertDialog(getActivity());
+
 
         dataList=new ArrayList<>();
         Button tipBtn= (Button) view.findViewById(R.id.tipBtn);
-        final SwipeRefreshLayout refreshLayout= ( SwipeRefreshLayout ) view.findViewById(R.id.refreshList);
+        refreshLayout= ( SwipeRefreshLayout ) view.findViewById(R.id.refreshList);
         refreshLayout.setColorSchemeResources(R.color.colorPrimary);
         tipBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -77,18 +81,13 @@ public class RewardList extends Fragment {
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                dataList=new ArrayList<RewardModel>();
-                if(isEnd){
-                    isEnd=false;
-                    listView.removeFooterView(completeText);
-                    listView.addFooterView(loadmoreView);
-                }
-                page=0;
+                initData();
                 getData();
                 refreshLayout.setRefreshing(false);
             }
         });
-
+        loading.show();
+        initData();
         getData();
         // 监听滚动事件
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -123,12 +122,24 @@ public class RewardList extends Fragment {
         });
 
         listView.addFooterView(loadmoreView);
+        loading.hide();
 
         return view;
     }
 
+    private void initData(){
+        dataList=new ArrayList<RewardModel>();
+        if(isEnd){
+            isEnd=false;
+            listView.removeFooterView(completeText);
+            listView.addFooterView(loadmoreView);
+        }
+        page=0;
+    }
+
     private void getData(){
         RequestQueue mqueue= Volley.newRequestQueue(getActivity());
+        if(isLoading) return;
         isLoading=true;
         final int psize=10;       //每次请求的数据数量
         //可选传入start,end
