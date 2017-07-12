@@ -1,6 +1,7 @@
 package com.project.lowesyang.quick_tip_consumer.Reward;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +39,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -54,7 +58,11 @@ public class RewardList extends Fragment {
     private SwipeMenuListView listView=null;
     private LoadingAlertDialog loading=null;
     private int page=0;         //打赏数据页数
-    SwipeRefreshLayout refreshLayout=null;
+    private SwipeRefreshLayout refreshLayout=null;
+    private TextView datePicker=null;
+    // 起始时间,用于根据时间查询打赏历史
+    private String start=null;
+    DatePickerDialog datePickerDialog=null;
 
     @Nullable
     @Override
@@ -63,6 +71,8 @@ public class RewardList extends Fragment {
         loadmoreView=inflater.inflate(R.layout.load_more,null);
         loadmoreView.setVisibility(View.VISIBLE);       //刷新视图默认不可见
         listView = (SwipeMenuListView) view.findViewById(R.id.rewards);
+        datePicker= ( TextView ) view.findViewById(R.id.datePicker);
+        datePicker.setText("Time Picker");
         loading=new LoadingAlertDialog(getActivity());
 
         // No more history textview
@@ -90,6 +100,18 @@ public class RewardList extends Fragment {
                 initData();
             }
         });
+
+        // date picker initialize
+        Calendar calendar=Calendar.getInstance();
+        datePickerDialog=new DatePickerDialog(getActivity(),DatePickerDialog.THEME_HOLO_LIGHT,new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                start=year+"-"+(monthOfYear+1)+"-"+dayOfMonth;
+                datePicker.setText("From "+start);
+                initData();
+            }
+        },calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH));
+        datePickerDialog.getDatePicker().setMaxDate((new Date()).getTime());
 
         // 监听滚动事件
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -205,6 +227,14 @@ public class RewardList extends Fragment {
             }
         });
 
+        //打开时间选择器
+        datePicker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                datePickerDialog.show();
+            }
+        });
+
         return view;
     }
 
@@ -231,13 +261,17 @@ public class RewardList extends Fragment {
     }
 
     private void getData(){
+        String url="http://crcrcry.com.cn/reward?token="+LocalStorage.getItem(getActivity(),"token");
+        if(start!=null){
+            url+="&start="+start;
+        }
         RequestQueue mqueue= Volley.newRequestQueue(getActivity());
         if(isLoading) return;
         isLoading=true;
         final int psize=10;       //每次请求的数据数量
         //可选传入start,end
         JsonObjectRequest jsonRequest=new JsonObjectRequest
-                (Request.Method.GET, "http://crcrcry.com.cn/reward?token="+LocalStorage.getItem(getActivity(),"token")+"&p="+page+"&psize="+psize, null, new Response.Listener<JSONObject>() {
+                (Request.Method.GET, url+"&p="+page+"&psize="+psize, null, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
@@ -310,11 +344,9 @@ public class RewardList extends Fragment {
 
     // 所有列表已加载完成
     private void loadComplete(){
-        if(!isEnd) {
-            isEnd = true;
-            listView.removeFooterView(loadmoreView);
-            listView.addFooterView(completeText);
-        }
+        isEnd = true;
+        listView.removeFooterView(loadmoreView);
+        listView.addFooterView(completeText);
     }
 
     @Override

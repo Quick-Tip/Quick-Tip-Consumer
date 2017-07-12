@@ -8,32 +8,61 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="2.6"
+        android:paddingBottom="5dp"
         >
 
-        <Button
-            android:id="@+id/tipBtn"
-            android:layout_width="wrap_content"
+        <android.support.v7.widget.CardView
+            android:id="@+id/cardView4"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:width="200dp"
-            android:height="80dp"
-            android:text="Go Tip"
-            android:textColor="#fff"
-            android:textSize="20dp"
-            android:theme="@style/primaryBtn"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="19dp"/>
+            android:layout_margin="10dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <Button
+                    android:id="@+id/tipBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:layout_margin="10dp"
+                    android:width="200dp"
+                    android:height="80dp"
+                    android:text="Go Tip"
+                    android:textColor="#fff"
+                    android:textSize="20dp"
+                    android:theme="@style/primaryBtn"/>
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
 
         <TextView
             android:id="@+id/textView10"
-            android:layout_width="match_parent"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentStart="true"
             android:layout_weight="1"
-            android:text="打赏历史"
-            android:textAlignment="center"
-            android:textSize="16dp"/>
+            android:text="Reward History"
+            android:textSize="20dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignStart="@+id/cardView4"/>
+
+        <Button
+            android:id="@+id/datePicker"
+            android:layout_width="wrap_content"
+            android:layout_height="27dp"
+            android:layout_alignEnd="@+id/cardView4"
+            android:layout_alignParentBottom="true"
+            android:paddingBottom="0dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="0dp"
+            android:text="Time Picker"
+            android:textColor="#666"
+            android:textDirection="rtl"
+            android:textSize="12dp"/>
+
+
     </RelativeLayout>
 
     <com.project.lowesyang.quick_tip_consumer.utils.VpSwipeRefreshLayout
