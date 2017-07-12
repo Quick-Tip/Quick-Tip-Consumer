@@ -58,6 +58,7 @@ public class NFCReadActivity extends AppCompatActivity {
             nfcAdapter.disableForegroundDispatch(this);
     }
 
+
     private void nfcInit(){
         TextView notice= (TextView) findViewById(R.id.nfc_notice);
         // 监听扫描NFC
@@ -115,6 +116,7 @@ public class NFCReadActivity extends AppCompatActivity {
                                             goTipFormIntent.putExtra("deskInfo", deskInfo.toString());
 
                                             startActivity(goTipFormIntent);
+                                            finish();
                                         } else {
                                             Toast.makeText(getApplicationContext(), response.getString("msg"), Toast.LENGTH_LONG).show();
                                         }

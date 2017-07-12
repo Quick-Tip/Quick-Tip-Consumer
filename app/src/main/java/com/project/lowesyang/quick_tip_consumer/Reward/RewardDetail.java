@@ -3,6 +3,8 @@ package com.project.lowesyang.quick_tip_consumer.Reward;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,6 +35,17 @@ public class RewardDetail extends AppCompatActivity {
         model= ( RewardModel ) getIntent().getSerializableExtra("model");
 
         setTitle(model.waitor_name);
+        // 带回退的toolbar
+        Toolbar toolbar= ( Toolbar ) findViewById(R.id.detail_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
 
         // waiter info
         TextView nickname= ( TextView ) findViewById(R.id.waiter_nickname);

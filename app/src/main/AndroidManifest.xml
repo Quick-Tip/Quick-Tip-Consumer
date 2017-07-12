@@ -47,7 +47,7 @@
             ></activity>
         <activity android:name=".Reward.RewardSuccess" android:label="Thanks for tip!">
         </activity>
-        <activity android:name=".Reward.RewardDetail" android:label="Info" android:parentActivityName=".MainActivity">
+        <activity android:name=".Reward.RewardDetail" android:label="Info" android:theme="@style/AppTheme.NoActionBar">
         </activity>
     </application>
 

@@ -61,8 +61,6 @@ public class RewardList extends Fragment {
         completeText.setGravity(Gravity.CENTER);
         completeText.setPadding(0, 30, 0, 30);
 
-
-
         dataList=new ArrayList<>();
         Button tipBtn= (Button) view.findViewById(R.id.tipBtn);
         refreshLayout= ( SwipeRefreshLayout ) view.findViewById(R.id.refreshList);
@@ -80,10 +78,12 @@ public class RewardList extends Fragment {
             @Override
             public void onRefresh() {
                 initData();
+                refreshLayout.setRefreshing(true);
                 getData();
             }
         });
         initData();
+        refreshLayout.setRefreshing(true);
         getData();
         // 监听滚动事件
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -136,8 +136,6 @@ public class RewardList extends Fragment {
         RequestQueue mqueue= Volley.newRequestQueue(getActivity());
         if(isLoading) return;
         isLoading=true;
-        refreshLayout.setRefreshing(true);
-
         final int psize=10;       //每次请求的数据数量
         //可选传入start,end
         JsonObjectRequest jsonRequest=new JsonObjectRequest
@@ -213,7 +211,6 @@ public class RewardList extends Fragment {
         if(!isEnd) {
             isEnd = true;
             listView.removeFooterView(loadmoreView);
-
             listView.addFooterView(completeText);
         }
     }

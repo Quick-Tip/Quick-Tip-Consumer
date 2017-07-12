@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -37,9 +38,11 @@ public class Account extends Fragment {
         final View view = inflater.inflate(R.layout.account,container,false);
         final Button submitBtn = ( Button ) view.findViewById(R.id.edit_submit);
         final EditText nickname= ( EditText ) view.findViewById(R.id.nickname);
+        TextView allMoney= ( TextView ) view.findViewById(R.id.allRewardMoeny);
         final JSONObject userInfo= ( JSONObject ) LocalStorage.getItem(view.getContext(),"userInfo");
         try {
-            nickname.setText(( CharSequence ) userInfo.get("nickname"));
+            nickname.setText(userInfo.getString("nickname"));
+            allMoney.setText(userInfo.getString("allRewardMoney")+" $");
             submitBtn.setEnabled(false);
         } catch (JSONException e) {
             e.printStackTrace();

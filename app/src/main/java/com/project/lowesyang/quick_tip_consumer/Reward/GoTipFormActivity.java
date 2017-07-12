@@ -182,8 +182,9 @@ public class GoTipFormActivity extends AppCompatActivity {
                                 try {
                                     String msg=response.getString("msg");
                                     if(response.getInt("code")==0){
-                                        JSONObject dataJosn=response.getJSONObject("data");
-                                        LocalStorage.setItem(getApplicationContext(),"token",dataJosn.getString("token"));
+                                        JSONObject dataJson=response.getJSONObject("data");
+                                        LocalStorage.setItem(getApplicationContext(),"token",dataJson.getString("token"));
+                                        LocalStorage.setItem(getApplicationContext(),"userInfo",dataJson.getJSONObject("userInfo").toString());
                                         Intent intent=new Intent(getApplicationContext(), RewardSuccess.class);
                                         startActivity(intent);
                                         finish();
