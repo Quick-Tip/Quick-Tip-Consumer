@@ -1,7 +1,10 @@
 package com.project.lowesyang.quick_tip_consumer.Reward;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -12,7 +15,6 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,7 +24,12 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.baoyz.swipemenulistview.SwipeMenu;
+import com.baoyz.swipemenulistview.SwipeMenuCreator;
+import com.baoyz.swipemenulistview.SwipeMenuItem;
+import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.project.lowesyang.quick_tip_consumer.R;
+import com.project.lowesyang.quick_tip_consumer.utils.LoadingAlertDialog;
 import com.project.lowesyang.quick_tip_consumer.utils.LocalStorage;
 
 import org.json.JSONArray;
@@ -30,6 +37,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -42,8 +50,9 @@ public class RewardList extends Fragment {
     private TextView completeText=null;
     private ArrayList<RewardModel> dataList=null;
     private boolean isLoading=false;        //是否正在请求数据
-    private boolean isEnd=false;            //是否已获取所有数据
-    private ListView listView=null;
+    private boolean isEnd=true;            //是否已获取所有数据
+    private SwipeMenuListView listView=null;
+    private LoadingAlertDialog loading=null;
     private int page=0;         //打赏数据页数
     SwipeRefreshLayout refreshLayout=null;
 
@@ -53,7 +62,8 @@ public class RewardList extends Fragment {
         View view = inflater.inflate(R.layout.reward_list,container,false);
         loadmoreView=inflater.inflate(R.layout.load_more,null);
         loadmoreView.setVisibility(View.VISIBLE);       //刷新视图默认不可见
-        listView = (ListView) view.findViewById(R.id.rewards);
+        listView = (SwipeMenuListView) view.findViewById(R.id.rewards);
+        loading=new LoadingAlertDialog(getActivity());
 
         // No more history textview
         completeText = new TextView(getActivity());
@@ -78,13 +88,9 @@ public class RewardList extends Fragment {
             @Override
             public void onRefresh() {
                 initData();
-                refreshLayout.setRefreshing(true);
-                getData();
             }
         });
-        initData();
-        refreshLayout.setRefreshing(true);
-        getData();
+
         // 监听滚动事件
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
             private int last_index;
@@ -104,6 +110,7 @@ public class RewardList extends Fragment {
             }
         });
 
+        // 选项点击事件
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -117,19 +124,110 @@ public class RewardList extends Fragment {
             }
         });
 
-        listView.addFooterView(loadmoreView);
+        // set creator in list item
+        listView.setMenuCreator(new SwipeMenuCreator() {
+            @Override
+            public void create(SwipeMenu menu) {
+                SwipeMenuItem deleteItem=new SwipeMenuItem(getActivity());
+                deleteItem.setBackground(new ColorDrawable(getResources().getColor(R.color.colorPrimary)));
+                deleteItem.setIcon(R.drawable.ic_delete);
+                deleteItem.setWidth(300);
+
+                menu.addMenuItem(deleteItem);
+            }
+        });
+
+        // 滑动事件，解决与下拉刷新的事件冲突
+        listView.setOnSwipeListener(new SwipeMenuListView.OnSwipeListener() {
+            @Override
+            public void onSwipeStart(int position) {
+                refreshLayout.setEnabled(false);
+            }
+
+            @Override
+            public void onSwipeEnd(int position) {
+                refreshLayout.setEnabled(true);
+            }
+        });
+
+        listView.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(final int position, SwipeMenu menu, int index) {
+                final RewardModel item=dataList.get(position);
+                AlertDialog.Builder confirmBox=new AlertDialog.Builder(getActivity());
+                confirmBox
+                        .setMessage("This history cannot be recovered if deleted!")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                loading.show();
+                                RequestQueue mqueue=Volley.newRequestQueue(getActivity());
+                                HashMap<String,Object> data=new HashMap<String, Object>();
+                                data.put("token",LocalStorage.getItem(getActivity(),"token"));
+                                data.put("id",item.id);
+                                JsonObjectRequest jsonRequest=new JsonObjectRequest
+                                        (Request.Method.PUT, "http://crcrcry.com.cn/reward", new JSONObject(data), new Response.Listener<JSONObject>() {
+                                            @Override
+                                            public void onResponse(JSONObject response) {
+                                                try {
+                                                    if(response.getInt("code")==0){
+                                                        dataList.remove(position);
+                                                        adapter.updateView(dataList);
+                                                    }
+                                                    Toast.makeText(getActivity(),response.getString("msg"),Toast.LENGTH_SHORT).show();
+                                                } catch (JSONException e) {
+                                                    e.printStackTrace();
+                                                }
+                                                loading.hide();
+                                            }
+                                        }, new Response.ErrorListener() {
+                                            @Override
+                                            public void onErrorResponse(VolleyError error) {
+                                                String msg="";
+                                                if(error.networkResponse!=null && error.networkResponse.statusCode==401){
+                                                    msg="Invalid token";
+                                                }
+                                                else {
+                                                    msg="Network error";
+                                                }
+                                                loading.hide();
+                                                Toast.makeText(getActivity(),msg,Toast.LENGTH_SHORT).show();
+                                            }
+
+                                        });
+                                mqueue.add(jsonRequest);
+                                dialog.dismiss();
+                            }
+                        })
+                        .setNegativeButton("No",null)
+                        .show();
+                return true;
+            }
+        });
 
         return view;
     }
 
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        initData();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        initData();
+    }
+
     private void initData(){
         dataList=new ArrayList<RewardModel>();
-        if(isEnd){
-            isEnd=false;
-            listView.removeFooterView(completeText);
-            listView.addFooterView(loadmoreView);
-        }
+        isEnd=true;
+        listView.removeFooterView(completeText);
+        listView.removeFooterView(loadmoreView);
         page=0;
+        refreshLayout.setRefreshing(true);
+        getData();
     }
 
     private void getData(){
@@ -151,6 +249,10 @@ public class RewardList extends Fragment {
                                 ArrayList<RewardModel> newList= ( ArrayList<RewardModel> ) JSONArr2List(jsonArray);
                                 if(newList.size()<psize){
                                     loadComplete();
+                                }
+                                else if(isEnd){
+                                    isEnd=false;
+                                    listView.addFooterView(loadmoreView);
                                 }
                                 dataList.addAll(newList);
                                 // set adapter
@@ -200,8 +302,8 @@ public class RewardList extends Fragment {
         for(int i=0;i<jsonArr.length();i++){
             json=jsonArr.getJSONObject(i);
             list.add(new RewardModel
-                    (json.getString("getterID"),json.getString("getterNickname"),json.getString("money"),
-                            json.getInt("star"),json.getString("dayTime"),json.getString("comment"),json.getString("shopNickname")));
+                    (json.getString("id"), json.getString("getterID"), json.getString("getterNickname"), json.getString("money"),
+                            json.getInt("star"), json.getString("dayTime"), json.getString("comment"), json.getString("shopNickname")));
         }
         return list;
     }

@@ -30,7 +30,7 @@
                 android:id="@+id/textView13"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="You have given tip"
+                android:text="You have given"
                 android:layout_marginTop="13dp"
                 android:layout_marginStart="16dp"
                 android:layout_alignParentTop="true"
@@ -44,9 +44,17 @@
                 android:textSize="24dp"
                 android:textColor="@color/colorSubPrimary"
                 android:textDirection="rtl"
-                android:layout_marginTop="13dp"
-                android:layout_below="@+id/textView13"
+                android:layout_centerVertical="true"
                 android:layout_alignStart="@+id/textView13"/>
+
+            <TextView
+                android:id="@+id/textView16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="for tip"
+                android:layout_below="@+id/allRewardMoeny"
+                android:layout_alignEnd="@+id/allRewardMoeny"
+                android:layout_marginTop="42dp"/>
         </RelativeLayout>
     </android.support.v7.widget.CardView>
 
@@ -125,7 +133,6 @@
         android:layout_below="@+id/editText"
         android:layout_alignStart="@+id/editText"
         android:layout_alignEnd="@+id/editText"/>
-
 
 
 

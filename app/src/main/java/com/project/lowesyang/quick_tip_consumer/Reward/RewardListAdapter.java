@@ -12,6 +12,8 @@ import com.project.lowesyang.quick_tip_consumer.R;
 
 import java.util.List;
 
+import static android.R.attr.type;
+
 /**
  * Created by LowesYang on 2017/7/6.
  */
@@ -52,6 +54,16 @@ public class RewardListAdapter extends BaseAdapter {
         public TextView date;
         public TextView comment;
         public TextView restaurant;
+    }
+
+    @Override
+    public int getViewTypeCount() {
+        return 1;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return type;
     }
 
     @Override

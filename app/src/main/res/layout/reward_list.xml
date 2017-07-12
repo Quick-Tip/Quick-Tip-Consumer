@@ -36,14 +36,14 @@
             android:textSize="16dp"/>
     </RelativeLayout>
 
-    <android.support.v4.widget.SwipeRefreshLayout
+    <com.project.lowesyang.quick_tip_consumer.utils.VpSwipeRefreshLayout
         android:id="@+id/refreshList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:layout_marginTop="2dp"
         >
-        <ListView
+        <com.baoyz.swipemenulistview.SwipeMenuListView
             android:id="@+id/rewards"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -51,5 +51,5 @@
             android:footerDividersEnabled="false"
             android:headerDividersEnabled="true"
             />
-    </android.support.v4.widget.SwipeRefreshLayout>
+    </com.project.lowesyang.quick_tip_consumer.utils.VpSwipeRefreshLayout>
 </LinearLayout>
