@@ -64,7 +64,8 @@ public class GoTipFormActivity extends AppCompatActivity {
         Intent nfcIntent=getIntent();
         try {
             deskInfo = new JSONObject(nfcIntent.getStringExtra("deskInfo"));
-            System.out.println(deskInfo);
+            setTitle("Desk: No."+deskInfo.getString("desk_id")+"   Waiter: "+deskInfo.getString("waiter_name"));
+
         } catch (JSONException e) {
             e.printStackTrace();
         }

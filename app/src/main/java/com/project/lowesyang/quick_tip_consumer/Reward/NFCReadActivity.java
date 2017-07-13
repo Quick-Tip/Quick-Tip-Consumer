@@ -88,7 +88,7 @@ public class NFCReadActivity extends AppCompatActivity {
 
             String response=readNFCTag(intent);
             if(response!=null){
-                Toast.makeText(getApplicationContext(),response,Toast.LENGTH_LONG).show();
+//                Toast.makeText(getApplicationContext(),response,Toast.LENGTH_LONG).show();
                 String[] nfcData=response.split(" ");
                 final String shopId=nfcData[0];
                 final String deskId=nfcData[1];

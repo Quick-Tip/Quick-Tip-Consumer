@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.project.lowesyang.quick_tip_consumer.R;
+import com.project.lowesyang.quick_tip_consumer.utils.LocalStorage;
 
 /**
  * Created by LowesYang on 2017/7/9.
@@ -22,6 +23,8 @@ public class RewardSuccess extends AppCompatActivity {
         backHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // 通知打赏历史自动刷新
+                LocalStorage.setItem(getApplicationContext(),"success_tip","1");
                 finish();
             }
         });

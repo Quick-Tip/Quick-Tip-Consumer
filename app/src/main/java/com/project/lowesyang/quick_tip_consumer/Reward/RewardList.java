@@ -62,6 +62,7 @@ public class RewardList extends Fragment {
     private TextView datePicker=null;
     // 起始时间,用于根据时间查询打赏历史
     private String start=null;
+    private TextView allData=null;      //恢复时间选择器
     DatePickerDialog datePickerDialog=null;
 
     @Nullable
@@ -74,6 +75,8 @@ public class RewardList extends Fragment {
         datePicker= ( TextView ) view.findViewById(R.id.datePicker);
         datePicker.setText("Time Picker");
         loading=new LoadingAlertDialog(getActivity());
+        allData= ( TextView ) view.findViewById(R.id.all_data);
+        allData.setVisibility(View.INVISIBLE);  //一开始不可见
 
         // No more history textview
         completeText = new TextView(getActivity());
@@ -109,9 +112,11 @@ public class RewardList extends Fragment {
                 start=year+"-"+(monthOfYear+1)+"-"+dayOfMonth;
                 datePicker.setText("From "+start);
                 initData();
+                allData.setVisibility(View.VISIBLE);
             }
         },calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH));
         datePickerDialog.getDatePicker().setMaxDate((new Date()).getTime());
+
 
         // 监听滚动事件
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -235,6 +240,17 @@ public class RewardList extends Fragment {
             }
         });
 
+        //恢复所有数据列表，清空时间选择器
+        allData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                start=null;
+                datePicker.setText("Time Picker");
+                allData.setVisibility(View.INVISIBLE);
+                initData();
+            }
+        });
+
         return view;
     }
 
@@ -247,7 +263,12 @@ public class RewardList extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        initData();
+
+        // 判断是否要自动刷新打赏历史
+        if(LocalStorage.getItem(getActivity(),"success_tip")=="1"){
+            LocalStorage.setItem(getActivity(),"success_tip","0");
+            initData();
+        }
     }
 
     private void initData(){

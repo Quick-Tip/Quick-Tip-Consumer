@@ -7,7 +7,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="2.6"
+        android:layout_weight="2.4"
         android:paddingBottom="5dp"
         >
 
@@ -15,7 +15,8 @@
             android:id="@+id/cardView4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp">
+            android:layout_margin="10dp"
+            >
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -34,6 +35,7 @@
                     android:textColor="#fff"
                     android:textSize="20dp"
                     android:theme="@style/primaryBtn"/>
+
             </RelativeLayout>
         </android.support.v7.widget.CardView>
 
@@ -41,11 +43,11 @@
             android:id="@+id/textView10"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignStart="@+id/cardView4"
             android:layout_weight="1"
             android:text="Reward History"
-            android:textSize="20dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignStart="@+id/cardView4"/>
+            android:textSize="20dp"/>
 
         <Button
             android:id="@+id/datePicker"
@@ -62,6 +64,16 @@
             android:textDirection="rtl"
             android:textSize="12dp"/>
 
+        <TextView
+            android:id="@+id/all_data"
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:text="All"
+            android:layout_marginEnd="9dp"
+            android:layout_alignBaseline="@+id/datePicker"
+            android:layout_alignBottom="@+id/datePicker"
+            android:layout_toStartOf="@+id/datePicker"/>
 
     </RelativeLayout>
 
